@@ -15,4 +15,20 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/calender', 'GoogleCalendarEventController@index');
+Route::get('/', function() {
+    return view('calendar');
+});
+
+Route::get('/time', function() {
+    return view('time_in_time_out.index');
+});
+
+Route::get('/schedule', function() {
+    return view('schedule');
+});
+
+Route::get('/timetracker/employees/all', 'EmployeesController@all');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

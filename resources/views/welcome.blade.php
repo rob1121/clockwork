@@ -66,7 +66,6 @@
     </head>
     <body>
         <div class="flex-center position-ref full-height">
-
             @if (Route::has('login'))
                 <div class="top-right links">
                     @auth
@@ -83,7 +82,13 @@
                     Laravel
                 </div>
 
-                <iframe src="https://calendar.google.com/calendar/embed?src=4hjom1mg1v975i668vfms2qf2s%40group.calendar.google.com&ctz=Asia/Manila" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+                <div class="links">
+                    <a href="https://laravel.com/docs">Documentation</a>
+                    <a href="https://laracasts.com">Laracasts</a>
+                    <a href="https://laravel-news.com">News</a>
+                    <a href="https://forge.laravel.com">Forge</a>
+                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                </div>
             </div>
         </div>
     </body>
