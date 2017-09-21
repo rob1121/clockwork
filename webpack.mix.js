@@ -14,4 +14,5 @@ let mix = require('laravel-mix');
 mix.react('resources/assets/react/app.jsx', 'public/js')
   .react('resources/assets/react/timeintimeout.jsx', 'public/js')
   .react('resources/assets/react/schedule.jsx', 'public/js')
-  .browserSync('https://timetracker.dev');
+  .react('resources/assets/react/schedule.edit.jsx', 'public/js')
+  .browserSync('http://timetracker.dev');

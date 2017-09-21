@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import { map } from 'lodash';
 
+import LoaderHOC from './LoaderHOC';
 import Schedule from './Schedule';
 import Row from './Layout/Row';
 import Employee from './Employee/Employee';
+import Title from './Layout/Title';
 
-export default class Scheduler extends React.Component {
+class Scheduler extends React.Component {
   constructor() {
     super();
 
@@ -113,24 +114,24 @@ export default class Scheduler extends React.Component {
     this.setActive(true);
   }
 
-  componentShouldUpdate
-
   render() {
     const { active, events } = this.state;
-    console.log(this.props.employees);
-    
-    const employees = this.props.employees ? map(this.props.employees, employee => (
+
+    const employees = map(this.props.employees, employee => (
       <Employee employee={employee} key={employee.email} >
         <Employee.Edit id={employee.id} />
         <Employee.View showSchedule={this.showSchedule} />
         <Employee.Remove id={employee.id} />
       </Employee>
-    )) : 'no employee found..';
+    ));
 
     return (
       <Row>
+        <Title>Employees</Title>
         {employees}
         <Schedule>
+
+
           <Schedule.Modal
             onExit={this.hideSchedule}
             active={active}
@@ -142,14 +143,14 @@ export default class Scheduler extends React.Component {
   }
 }
 
-Scheduler.defaultProps = {
-  employees: null,
+Scheduler.propTypes = {
+  employees: PropTypes.objectOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+      email: PropTypes.string,
+    }),
+  ).isRequired,
 };
 
-// Scheduler.propTypes = {
-//   employees: PropTypes.arrayOf({
-//     id: PropTypes.number,
-//     name: PropTypes.string,
-//     email: PropTypes.string,
-//   }),
-// };
+export default LoaderHOC('employees')(Scheduler);

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Icon from '../Forms/Icon';
 
 const Edit = props => (
-  <a href={`/timetracker/employee/${props.id}/edit`} title="edit schedule">
+  <a href={`/employee-schedule/${props.id}/edit`} title="edit schedule">
     <Icon icon="calendar" />
   </a>
 );

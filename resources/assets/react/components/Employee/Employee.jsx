@@ -7,13 +7,13 @@ import Columns from '../Layout/Columns';
 import Column from '../Layout/Column';
 
 const Employee = props => (
-  <Columns>
-    <Column>{props.employee.name}</Column>
-    <Column>{props.employee.email}</Column>
-    <Column>
-      {props.children}
-    </Column>
-  </Columns>
+    <Columns>
+      <Column>{props.employee.name}</Column>
+      <Column>{props.employee.email}</Column>
+      <Column>
+        {props.children}
+      </Column>
+    </Columns>
 );
 
 Employee.View = View;

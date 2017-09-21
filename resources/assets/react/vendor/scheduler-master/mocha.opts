@@ -1,4 +1,0 @@
---require ./tests/setup
---full-trace
---compilers js:babel-core/register
---recursive ./tests/**/*.jsx

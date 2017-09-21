@@ -28,6 +28,7 @@ Route::get('/schedule', function() {
 });
 
 Route::get('/timetracker/employees/all', 'EmployeesController@all');
+Route::get('/employee-schedule/{id}/edit', 'EmployeeScheduleController@edit');
 
 Auth::routes();
 
