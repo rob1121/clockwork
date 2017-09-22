@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'title', 'is_admin'
     ];
 
     /**
@@ -26,4 +26,13 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+
+    public function schedule() {
+        return $this->hasOne(Schedule::class);
+    }
+    
+    public function scheduleTask() {
+        return $this->hasOne(ScheduleTask::class);
+    }
 }

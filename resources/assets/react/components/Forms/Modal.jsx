@@ -9,9 +9,7 @@ export default class Modal extends React.Component {
     return (
       <div className={`modal ${this.props.active ? 'is-active' : ''}`} style={{ zIndex: 1050 }}>
         <div className="modal-background" />
-        <div className="modal-card full-width">
-          {this.props.children}
-        </div>
+        <div className="modal-card full-width">{this.props.children}</div>
       </div>
     );
   }
