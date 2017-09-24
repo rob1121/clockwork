@@ -16,9 +16,10 @@ class CreateScheduleTaskTable extends Migration
         Schema::create('schedule_tasks', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->timestamp('date_start');
-            $table->timestamp('date_end');
+            $table->date('date_start')->nullable();
+            $table->date('date_end')->nullable();
+            $table->time('required_time_in')->nullable();
+            $table->time('required_time_out')->nullable();
             $table->string('location');
             $table->string('longitude');
             $table->string('latitude');
@@ -34,10 +35,6 @@ class CreateScheduleTaskTable extends Migration
      */
     public function down()
     {
-        Schema::table('schedule_tasks', function ($table) {
-            $table->dropForeign('schedule_tasks_user_id_foreign');
-        });
-
         Schema::dropIfExists('schedule_tasks');
     }
 }

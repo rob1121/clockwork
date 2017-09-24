@@ -6,7 +6,7 @@ import Modal from './Forms/Modal';
 
 const allViews = Object.keys(BigCalendar.views).map(k => BigCalendar.views[k]);
 
-const ScheduleModal = props => (
+const ScheduleModal = (props) => (
   <Modal active={props.active}>
     <Modal.Content>
       <BigCalendar
@@ -27,8 +27,8 @@ ScheduleModal.propTypes = {
     PropTypes.shape({
       title: PropTypes.string,
       allDay: PropTypes.bool,
-      start: PropTypes.instanceOf(Date),
-      end: PropTypes.instanceOf(Date),
+      start: PropTypes.string,
+      end: PropTypes.string,
     }),
   ).isRequired,
 };

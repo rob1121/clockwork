@@ -1,15 +1,15 @@
-const employees = (state = [], action) => {
-    switch(action.type) {
+const employees = (state = {}, action) => {
+  switch (action.type) {
     case 'SET_EMPLOYEES':
-        state = {
+      state = {
         ...action.payload,
-        };
-    break;
+      };
+      break;
     default:
-    break;
-    }
+      break;
+  }
 
-    return state;
+  return state;
 };
 
 export default employees;

@@ -19,7 +19,7 @@ Route::get('/', function() {
     return view('calendar');
 });
 
-Route::get('/time', function() {
+Route::get('/time/{user}', function() {
     return view('time_in_time_out.index');
 });
 
@@ -27,9 +27,13 @@ Route::get('/schedule', function() {
     return view('schedule');
 });
 
-Route::get('/timetracker/employees/all', 'EmployeesController@all');
-Route::get('/employee-schedule/{id}/edit', 'EmployeeScheduleController@edit');
+Route::get('/employee-schedule/{user}/edit', 'EmployeeScheduleController@edit');
+
+Route::put('/employee-schedule/{user}', 'EmployeeScheduleController@update');
+Route::put('/employee-timein/{user}', 'UserTimeInController@update');
+Route::put('/employee-timeout/{user}', 'UserTimeOutController@update');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+

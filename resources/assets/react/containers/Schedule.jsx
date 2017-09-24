@@ -6,10 +6,9 @@ import { getEmployees } from '../actions/EmployeesAction';
 import Nav from '../components/Nav';
 import Scheduler from '../components/Scheduler';
 
-class App extends React.Component
-{
+class App extends React.Component {
   componentWillMount() {
-    axios.get('/timetracker/employees/all').then(({data}) => {
+    axios.get('/api/employee').then(({ data }) => {
       this.props.getEmployees(data);
     });
   }
@@ -25,18 +24,20 @@ class App extends React.Component
 
 App.propTypes = {
   getEmployees: PropTypes.func.isRequired,
+  employees: PropTypes.objectOf(PropTypes.shape({
+    name: PropTypes.string,
+    email: PropTypes.string,
+    id: PropTypes.number,
+    is_admin: PropTypes.bool,
+  })).isRequired,
 };
 
-const mapStateToProps = ({ employees }) => {
-  return {
-    employees,
-  };
-};
+const mapStateToProps = ({ employees }) => ({
+  employees,
+});
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getEmployees: employees => dispatch(getEmployees(employees)),
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  getEmployees: employees => dispatch(getEmployees(employees)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

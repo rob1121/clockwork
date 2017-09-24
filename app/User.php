@@ -2,12 +2,13 @@
 
 namespace App;
 
+use App\Timetracker\Traits\ModelInstance;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, ModelInstance;
 
     /**
      * The attributes that are mass assignable.
@@ -15,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'title', 'is_admin'
+        'name', 'email', 'password', 'title', 'is_admin',
     ];
 
     /**
@@ -24,15 +25,18 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'created_at', 'updated_at'
     ];
 
-
     public function schedule() {
-        return $this->hasOne(Schedule::class);
+        return $this->hasMany(Schedule::class);
     }
     
     public function scheduleTask() {
-        return $this->hasOne(ScheduleTask::class);
+        return $this->hasMany(ScheduleTask::class);
+    }
+
+    public function getIsAdminAttribute($value) {
+      return (boolean)$value;
     }
 }

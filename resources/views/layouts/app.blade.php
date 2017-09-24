@@ -73,8 +73,5 @@
 
         @yield('content')
     </div>
-
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.jsx') }}"></script>
 </body>
 </html>
