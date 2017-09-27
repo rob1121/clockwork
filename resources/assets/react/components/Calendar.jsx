@@ -14,14 +14,16 @@ const allViews = Object.keys(BigCalendar.views).map(k => BigCalendar.views[k]);
 BigCalendar.momentLocalizer(moment); // or globalizeLocalizer
 
 const Calendar = ({ events, selectEvent, selectEventSlot }) => (
-  <BigCalendar
-    selectable
-    events={events}
-    views={allViews}
-    defaultDate={new Date()}
-    onSelectEvent={event => selectEvent(event)}
-    onSelectSlot={slotInfo => selectEventSlot(slotInfo)}
-  />
+  <div>
+    <BigCalendar
+      selectable
+      events={events}
+      scrollToTime={new Date(1970, 1, 1, 6)}
+      defaultDate={new Date()}
+      onSelectEvent={event => selectEvent(event)}
+      onSelectSlot={slotInfo => selectEventSlot(slotInfo)}
+    />
+  </div>
 );
 
 Calendar.defaultProps = {
