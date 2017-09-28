@@ -7,9 +7,16 @@ use Illuminate\Http\Request;
 
 class EmployeeScheduleController extends Controller
 {
+  public function show() {
+    return view('employee.edit');
+  }
+  /**
+   * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+   */
   public function edit() {
     return view('schedule.edit');
   }
+
   /**
    * @param Request $request
    * @param User $user

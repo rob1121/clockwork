@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { setEmployee, updateEmployee, saveEmployeeToDb } from '../actions/EmployeeAction';
 import Nav from '../components/Nav';
-import Employee from '../components/EmployeeEdit/Employee';
+import EmployeeDetails from '../components/EmployeeEdit/EmployeeDetails';
+import Calendar from '../components/Calendar';
 
 const EMPLOYEE_ID_SECTION = 4;
 
@@ -17,9 +18,21 @@ class App extends React.Component {
   }
 
   render() {
+
+    var windowObjectReference;
+    var strWindowFeatures = "menubar=no,location=no,resizable=no,scrollbars=no,status=no,minimizable=no,width=650,height=500,resizable=no";
+
+
     return (
       <Nav>
-        <Employee
+        <button onClick={() => {
+          windowObjectReference = window.open("http://localhost:3000/employee-schedule/1", "CNN_WindowName", strWindowFeatures);
+        }}>cnn </button>
+        <button onClick={() => {
+          windowObjectReference = window.open("http://localhost:3000/employee-schedule/1", "CNN_WindowName", strWindowFeatures);
+        }}>cnn </button>
+        <Calendar events={this.props.employee.schedule_task} />
+        <EmployeeDetails
           employee={this.props.employee}
           updateEmployee={this.props.updateEmployee}
           saveEmployeeToDb={this.props.saveEmployeeToDb}

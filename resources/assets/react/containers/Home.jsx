@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { isEmpty } from 'lodash';
 import Calendar from '../components/Calendar';
 import Nav from '../components/Nav';
 
@@ -31,10 +30,7 @@ class App extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    return {
-        header: state.header,
-        footer: state.footer
-    }
+  return false;
 }
 
 const mapDispatchToProps = (dispatch) => {

@@ -28,7 +28,7 @@ Route::get('/schedule', function() {
 });
 
 Route::get('/employee-schedule/{user}/edit', 'EmployeeScheduleController@edit');
-
+Route::get('/employee-schedule/{id}', 'EmployeeScheduleController@show');
 Route::put('/employee-schedule/{user}', 'EmployeeScheduleController@update');
 Route::put('/employee-timein/{user}', 'UserTimeInController@update');
 Route::put('/employee-timeout/{user}', 'UserTimeOutController@update');

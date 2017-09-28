@@ -1,6 +1,7 @@
 {
     "/js/schedule.js": "/js/schedule.js",
     "/js/schedule.edit.js": "/js/schedule.edit.js",
+    "/js/schedule.popup.js": "/js/schedule.popup.js",
     "/js/app.js": "/js/app.js",
     "/js/timeintimeout.js": "/js/timeintimeout.js"
 }
