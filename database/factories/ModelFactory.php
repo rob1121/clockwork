@@ -29,7 +29,7 @@ $factory->define(App\Schedule::class, function (Faker\Generator $faker) {
 
 $factory->define(App\ScheduleTask::class, function (Faker\Generator $faker) {
     $date_start = Carbon::now()->startOfMonth()->toDateTimeString();
-    $date_end = Carbon::parse($date_start,'Asia/Manila')->endOfMonth()->toDateTimeString();
+    $date_end = Carbon::parse($date_start, 'Asia/Manila')->endOfMonth()->toDateTimeString();
 
     return [
         'user_id' => function () {
@@ -42,7 +42,7 @@ $factory->define(App\ScheduleTask::class, function (Faker\Generator $faker) {
         'location' => $faker->word,
         'longitude' => $faker->longitude,
         'latitude' => $faker->latitude,
-        'task' => $faker->word,
+        'task' => $faker->sentence,
+        'task' => $faker->paragraph,
     ];
 });
-

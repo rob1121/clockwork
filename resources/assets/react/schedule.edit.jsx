@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import ScheduleEdit from './containers/ScheduleEdit';
 import store from './store';
 
-require('../js/bootstrap');
+// require('../js/bootstrap');
 
 render(
   <Provider store={store}>

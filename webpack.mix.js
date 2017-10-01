@@ -15,5 +15,4 @@ mix.react('resources/assets/react/app.jsx', 'public/js');
 mix.react('resources/assets/react/timeintimeout.jsx', 'public/js');
 mix.react('resources/assets/react/schedule.jsx', 'public/js');
 mix.react('resources/assets/react/schedule.edit.jsx', 'public/js');
-mix.react('resources/assets/react/schedule.popup.jsx', 'public/js');
 mix.browserSync('http://timetracker.dev');

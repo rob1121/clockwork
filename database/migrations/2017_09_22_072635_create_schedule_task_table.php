@@ -15,15 +15,16 @@ class CreateScheduleTaskTable extends Migration
     {
         Schema::create('schedule_tasks', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned();
+            $table->integer('user_id')->unsigned()->nullable();
             $table->date('date_start')->nullable();
             $table->date('date_end')->nullable();
             $table->time('required_time_in')->nullable();
             $table->time('required_time_out')->nullable();
-            $table->string('location');
-            $table->string('longitude');
-            $table->string('latitude');
-            $table->string('task');
+            $table->string('location')->nullable();
+            $table->string('longitude')->nullable();
+            $table->string('latitude')->nullable();
+            $table->string('task')->nullable();
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }

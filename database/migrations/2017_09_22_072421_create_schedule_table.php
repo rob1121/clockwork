@@ -18,9 +18,9 @@ class CreateScheduleTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->time('time_in')->nullable();
             $table->time('time_out')->nullable();
-            $table->string('location');
-            $table->string('longitude');
-            $table->string('latitude');
+            $table->string('location')->nullable();
+            $table->string('longitude')->nullable();
+            $table->string('latitude')->nullable();
             $table->date('due')->nullable();
             $table->timestamps();
         });
