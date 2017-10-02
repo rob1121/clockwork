@@ -532,14 +532,4 @@ class Gate implements GateContract
     {
         return $this->abilities;
     }
-
-    /**
-     * Get all of the defined policies.
-     *
-     * @return array
-     */
-    public function policies()
-    {
-        return $this->policies;
-    }
 }

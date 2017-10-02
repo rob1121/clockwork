@@ -2,7 +2,6 @@ import React from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { map, isEmpty } from 'lodash';
 import {
   setEmployee,
   updateEmployee,
@@ -17,6 +16,7 @@ import Calendar from '../components/Calendar';
 import Row from '../components/Layout/Row';
 import EmployeeConfigModal from '../components/Employee/Config';
 import EmployeeViewScheduleModal from '../components/Employee/ViewConfig';
+import ErrorNotification from '../components/Forms/ErrorNotification';
 
 const EMPLOYEE_ID_SECTION = 4;
 
@@ -41,6 +41,14 @@ class App extends React.Component {
     this.resetErrors = this.resetErrors.bind(this);
     this.getEmployeeSchedule = this.getEmployeeSchedule.bind(this);
   }
+  shouldComponentUpdate(nextProps, nextState) {
+    const hasNewErrors = JSON.stringify(nextState.errors) !== JSON.stringify(this.state.errors);
+    const hasNewEmployeeSchedule = JSON.stringify(nextProps.employeeSchedule) !== JSON.stringify(this.props.employeeSchedule);
+    const hasNewEmployee = JSON.stringify(nextProps.employee) !== JSON.stringify(this.props.employee);
+
+    return (hasNewErrors || hasNewEmployeeSchedule || hasNewEmployee);
+  }
+
 
   componentWillMount() {
     const employeeId = window.location.href.split('/')[EMPLOYEE_ID_SECTION];
@@ -138,31 +146,13 @@ class App extends React.Component {
     const { showConfigModal, showViewConfigModal, errors } = this.state;
     const { employee, employeeSchedule } = this.props;
 
-    let errorsDiv = '';
-    if (!isEmpty(errors.errors)) {
-      const errorList = map(errors.errors, error => (
-        <li>{error}</li>
-      ));
-
-      errorsDiv = (
-        <div>
-          <br />
-          <Row width={10} offset={1}>
-            <div className="notification is-danger">
-              <button className="delete" onClick={this.resetErrors} />
-              <strong>{errors.message}</strong>
-              {errorList}
-            </div>
-          </Row>
-        </div>
-      );
-
-      setTimeout(this.resetErrors, 10000);
-    }
-
     return (
       <Nav>
-        {errorsDiv}
+        <ErrorNotification
+          errors={errors.errors}
+          message={errors.message}
+          reset={this.resetErrors}
+        />
         <EmployeeDetails
           employee={employee}
           updateEmployee={this.props.updateEmployee}
@@ -191,12 +181,12 @@ class App extends React.Component {
           active={showConfigModal}
         />
 
-        <EmployeeViewScheduleModal
+        {/* <EmployeeViewScheduleModal
           schedule={employeeSchedule}
           onExit={this.toggleViewConfigModal}
           onSave={this.saveEmployeeSchedule}
           active={showViewConfigModal}
-        />
+        /> */}
       </Nav>
     );
   }

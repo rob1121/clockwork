@@ -30,63 +30,15 @@ class Config extends Component {
       map: {},
     };
 
-    this.setDateRange = this.setDateRange.bind(this);
-    this.handleChangeStart = this.handleChangeStart.bind(this);
-    this.handleChangeEnd = this.handleChangeEnd.bind(this);
+    this.setStart = this.setStart.bind(this);
+    this.setEnd = this.setEnd.bind(this);
 
-    this.setTimeRange = this.setTimeRange.bind(this);
-    this.handleChangeTimeIn = this.handleChangeTimeIn.bind(this);
-    this.handleChangeTimeOut = this.handleChangeTimeOut.bind(this);
+    this.setTimeIn = this.setTimeIn.bind(this);
+    this.setTimeOut = this.setTimeOut.bind(this);
     this.setTask = this.setTask.bind(this);
     this.setDescription = this.setDescription.bind(this);
     this.setMapDetails = this.setMapDetails.bind(this);
     this.openMapMarker = this.openMapMarker.bind(this);
-  }
-
-  /**
-   * set date start and date end
-   * 
-   * @param {any} { startDate, endDate } 
-   * @memberof Config
-   */
-  setDateRange({ startDate, endDate }) {
-    startDate = startDate || this.state.start;
-    endDate = endDate || this.state.end;
-
-    if (startDate.isAfter(endDate)) {
-      const temp = startDate;
-      startDate = endDate;
-      endDate = temp;
-    }
-
-    this.setState({
-      ...this.state,
-      end: endDate,
-      start: startDate,
-    });
-  }
-
-  /**
-   * set time in and time out
-   * 
-   * @param {any} { timein, timeout } 
-   * @memberof Config
-   */
-  setTimeRange({ timein, timeout }) {
-    timein = timein || this.state.timein;
-    timeout = timeout || this.state.timeout;
-
-    if (timein.isAfter(timeout)) {
-      const temp = timein;
-      timein = timeout;
-      timeout = temp;
-    }
-
-    this.setState({
-      ...this.state,
-      timeout,
-      timein,
-    });
   }
 
   /**
@@ -134,8 +86,11 @@ class Config extends Component {
    * @param {any} startDate 
    * @memberof Config
    */
-  handleChangeStart(startDate) {
-    this.setDateRange({ startDate });
+  setStart(startDate) {
+    this.setState({
+      ...this.state,
+      start: startDate
+    });
   }
 
   /**
@@ -144,8 +99,11 @@ class Config extends Component {
    * @param {any} endDate 
    * @memberof Config
    */
-  handleChangeEnd(endDate) {
-    this.setDateRange({ endDate });
+  setEnd(endDate) {
+    this.setState({
+      ...this.state,
+      end: endDate
+    });
   }
 
   /**
@@ -154,8 +112,11 @@ class Config extends Component {
    * @param {any} timein 
    * @memberof Config
    */
-  handleChangeTimeIn(timein) {
-    this.setTimeRange({ timein });
+  setTimeIn(timein) {
+    this.setState({
+      ...this.state,
+      timein,
+    });
   }
 
   /**
@@ -164,13 +125,19 @@ class Config extends Component {
    * @param {any} timeout 
    * @memberof Config
    */
-  handleChangeTimeOut(timeout) {
-    this.setTimeRange({ timeout });
+  setTimeOut(timeout) {
+    this.setState({
+      ...this.state,
+      timeout,
+    });
   }
   openMapMarker() {
-    const mapMarker = window.open('/map/marker');
+    const mapMarker = window.open('/map/marker', "", "toolbar=no,scrollbars=no,resizable=no,top=500,left=500,width=720,height=720");
     mapMarker.onbeforeunload = () => {
-      console.log(mapMarker.mapState);
+      this.setState({
+        ...this.state,
+        map: mapMarker.mapState,
+      });
     }
   }
 
@@ -190,14 +157,7 @@ class Config extends Component {
                 <span>From:</span>
                 <DatePicker
                   selected={start}
-                  selectsStart
-                  startDate={start}
-                  endDate={end}
-                  onChange={this.handleChangeStart}
-                  peekNextMonth
-                  showMonthDropdown
-                  showYearDropdown
-
+                  onChange={this.setStart}
                   className="input is-small"
                   dropdownMode="select"
                 />
@@ -206,13 +166,7 @@ class Config extends Component {
                 <span>To:</span>
                 <DatePicker
                   selected={end}
-                  selectsEnd
-                  startDate={start}
-                  endDate={end}
-                  onChange={this.handleChangeEnd}
-                  peekNextMonth
-                  showMonthDropdown
-                  showYearDropdown
+                  onChange={this.setEnd}
                   className="input is-small"
                   dropdownMode="select"
                 />
@@ -226,7 +180,7 @@ class Config extends Component {
                   showSecond={false}
                   value={timein}
                   className="xxx"
-                  onChange={this.handleChangeTimeIn}
+                  onChange={this.setTimeIn}
                   format={format}
                   use12Hours
                 />
@@ -237,7 +191,7 @@ class Config extends Component {
                   showSecond={false}
                   value={timeout}
                   className="xxx"
-                  onChange={this.handleChangeTimeOut}
+                  onChange={this.setTimeOut}
                   format={format}
                   use12Hours
                 />
@@ -270,12 +224,26 @@ class Config extends Component {
             </Columns>
 
             <button className="button" onClick={this.openMapMarker}>Set Task Location</button>
-            {/* <MapSchedule
-              loadMap={active}
-              onMark={this.setMapDetails}
-            /> */}
+            <Columns>
+              <Column>
+                <p>Location:</p>
+                <label className="label">{this.state.map.location}</label>
+              </Column>
+            </Columns>
+            <Columns>
+              <Column>
+                <p>latitude:</p>
+                <label className="label">{this.state.map.lat}</label>
+              </Column>
+            </Columns>
+            <Columns>
+              <Column>
+                <p>longitude:</p>
+                <label className="label">{this.state.map.lng}</label>
+              </Column>
+            </Columns>
           </Row>
-        </Modal.Content>
+        </Modal.Content >
         <Modal.Footer>
           <button className="button" onClick={() => onSubmit(this.state)}>
             <span>Save</span>
@@ -291,7 +259,7 @@ class Config extends Component {
             </span>
           </button>
         </Modal.Footer>
-      </Modal>
+      </Modal >
     );
   }
 }

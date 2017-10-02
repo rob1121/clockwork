@@ -1,8 +1,9 @@
 <?php namespace App\Http\Controllers;
 
-use App\Schedule;
-use App\ScheduleTask;
 use App\User;
+use App\Schedule;
+use Carbon\Carbon;
+use App\ScheduleTask;
 use Illuminate\Http\Request;
 
 class EmployeeScheduleController extends Controller
@@ -35,18 +36,22 @@ class EmployeeScheduleController extends Controller
         if (!isset($request->scheduleTask)) {
             return false;
         }
+        
+        //fomat date to ex. 24:59:00
+        $timein = Carbon::parse($request->scheduleTask['required_time_in'])->format('H:i:00');
+        $timeout = Carbon::parse($request->scheduleTask['required_time_out'])->format('H:i:00');
 
         // validate schedule
         $request->validate([
-            "scheduleTask.date_start" => 'required',
-            "scheduleTask.date_end" => 'required',
-            "scheduleTask.required_time_in" => 'required',
-            "scheduleTask.required_time_out" => 'required',
-            "scheduleTask.location" => 'required',
-            "scheduleTask.longitude" => 'required|numeric',
-            "scheduleTask.latitude" => 'required|numeric',
-            "scheduleTask.task" => 'required',
-            "scheduleTask.description" => 'required',
+            "scheduleTask.date_start" => "required|before_or_equal:{$request->scheduleTask['date_end']}",
+            "scheduleTask.date_end" => "required|after_or_equal:{$request->scheduleTask['date_start']}",
+            "scheduleTask.required_time_in" => "required|before_or_equal:{$timeout}",
+            "scheduleTask.required_time_out" => "required|after_or_equal:{$timein}",
+            "scheduleTask.location" => "required",
+            "scheduleTask.longitude" => "required|numeric",
+            "scheduleTask.latitude" => "required|numeric",
+            "scheduleTask.task" => "required",
+            "scheduleTask.description" => "required",
         ]);
 
         //add or update schedule task

@@ -25,9 +25,9 @@ trait ValidatesRequests
 
         $validator->validate();
 
-        return $request->only(collect($validator->getRules())->keys()->map(function ($rule) {
-            return str_contains($rule, '.') ? explode('.', $rule)[0] : $rule;
-        })->unique()->toArray());
+        return $request->only(
+            array_keys($validator->getRules())
+        );
     }
 
     /**
@@ -46,9 +46,7 @@ trait ValidatesRequests
              ->make($request->all(), $rules, $messages, $customAttributes)
              ->validate();
 
-        return $request->only(collect($rules)->keys()->map(function ($rule) {
-            return str_contains($rule, '.') ? explode('.', $rule)[0] : $rule;
-        })->unique()->toArray());
+        return $request->only(array_keys($rules));
     }
 
     /**

@@ -293,7 +293,7 @@ trait InteractsWithPivotTable
     {
         $record[$this->relatedPivotKey] = $id;
 
-        $record[$this->foreignPivotKey] = $this->parent->{$this->parentKey};
+        $record[$this->foreignPivotKey] = $this->parent->getKey();
 
         // If the record needs to have creation and update timestamps, we will make
         // them by calling the parent model's "freshTimestamp" method which will
@@ -439,7 +439,7 @@ trait InteractsWithPivotTable
             call_user_func_array([$query, 'whereIn'], $arguments);
         }
 
-        return $query->where($this->foreignPivotKey, $this->parent->{$this->parentKey});
+        return $query->where($this->foreignPivotKey, $this->parent->getKey());
     }
 
     /**

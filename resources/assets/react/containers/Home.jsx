@@ -7,7 +7,7 @@ import Nav from '../components/Nav';
 class App extends React.Component {
   constructor() {
     super();
-    
+
     this.state = {
       events: [],
     };
@@ -30,13 +30,12 @@ class App extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return false;
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-        // setHeaderTitle: (header)    => dispatch(setHeaderTitle(header)),
-    }
+  return {
+    // setHeaderTitle: (header)    => dispatch(setHeaderTitle(header)),
+  }
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

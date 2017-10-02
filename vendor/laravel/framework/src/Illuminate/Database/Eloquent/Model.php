@@ -1031,10 +1031,10 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
     /**
      * Determine if two models are not the same.
      *
-     * @param  \Illuminate\Database\Eloquent\Model|null  $model
+     * @param  \Illuminate\Database\Eloquent\Model  $model
      * @return bool
      */
-    public function isNot($model)
+    public function isNot(Model $model)
     {
         return ! $this->is($model);
     }

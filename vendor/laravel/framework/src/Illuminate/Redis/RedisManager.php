@@ -118,16 +118,6 @@ class RedisManager implements Factory
     }
 
     /**
-     * Return all of the created connections.
-     *
-     * @return array
-     */
-    public function connections()
-    {
-        return $this->connections;
-    }
-
-    /**
      * Pass methods onto the default Redis connection.
      *
      * @param  string  $method

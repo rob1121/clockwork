@@ -49,8 +49,8 @@ export function saveEmployeeToDb() {
     const employee = getState().employee;
     return new Promise((resolve, reject) => {
       axios.put(`/employee-schedule/${employee.id}`, {
-        ...employee,
-      })
+          ...employee,
+        })
         .then(() => resolve())
         .catch(error => reject(error.response.data));
     });
@@ -70,21 +70,26 @@ export function saveEmployeeSchedule({
     const employee = getState().employee;
     return new Promise((resolve, reject) => {
       axios.put(`/employee-schedule/${employee.id}`, {
-        ...employee,
-        scheduleTask: {
-          date_start: start.format('YYYY-MM-DD'),
-          date_end: end.format('YYYY-MM-DD'),
-          required_time_in: timein.format('HH:mm:ss'),
-          required_time_out: timeout.format('HH:mm:ss'),
-          location: map.location,
-          longitude: map.lng,
-          latitude: map.lat,
-          task,
-          description,
-        },
-      }).then(({
-        data,
-      }) => resolve(data))
+          ...employee,
+          scheduleTask: {
+            date_start: start.format('YYYY-MM-DD'),
+            date_end: end.format('YYYY-MM-DD'),
+            required_time_in: timein.format('HH:mm:ss'),
+            required_time_out: timeout.format('HH:mm:ss'),
+            location: map.location,
+            longitude: map.lng,
+            latitude: map.lat,
+            task,
+            description,
+          },
+        }).then(({
+          data,
+        }) => {
+          dispatch({
+            type: 'RESET_SCHEDULE'
+          });
+          resolve(data);
+        })
         .catch(error => reject(error.response.data));
     });
   };

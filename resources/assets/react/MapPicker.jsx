@@ -1,8 +1,8 @@
 import React from 'react';
 import { render } from 'react-dom';
-import MapSchedule from './components/MapSchedule.jsx';
+import MapMarker from './components/MapMarker.jsx';
 
 render(
-  <MapSchedule />,
+  <MapMarker />,
   window.document.getElementById('app'),
 );

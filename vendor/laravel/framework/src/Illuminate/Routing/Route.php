@@ -698,14 +698,13 @@ class Route
     }
 
     /**
-     * Get the action array or one of its properties for the route.
+     * Get the action array for the route.
      *
-     * @param  string|null  $key
-     * @return mixed
+     * @return array
      */
-    public function getAction($key = null)
+    public function getAction()
     {
-        return Arr::get($this->action, $key);
+        return $this->action;
     }
 
     /**

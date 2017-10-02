@@ -1,4 +1,4 @@
-const mix = require('laravel-mix');
+let mix = require('laravel-mix');
 
 /*
  |--------------------------------------------------------------------------
@@ -11,9 +11,9 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.react('resources/assets/react/app.jsx', 'public/js');
-mix.react('resources/assets/react/timeintimeout.jsx', 'public/js');
-mix.react('resources/assets/react/schedule.jsx', 'public/js');
-mix.react('resources/assets/react/schedule.edit.jsx', 'public/js');
-mix.react('resources/assets/react/MapPicker.jsx', 'public/js');
-mix.browserSync('http://timetracker.dev');
+mix.react('resources/assets/react/app.jsx', 'public/js')
+  .react('resources/assets/react/timeintimeout.jsx', 'public/js')
+  .react('resources/assets/react/schedule.jsx', 'public/js')
+  .react('resources/assets/react/schedule.edit.jsx', 'public/js')
+  .react('resources/assets/react/MapPicker.jsx', 'public/js')
+  .browserSync('http://clockwork.dev');

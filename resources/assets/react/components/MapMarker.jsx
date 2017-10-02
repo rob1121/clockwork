@@ -70,28 +70,25 @@ export default class Map extends Component {
     Map.loadJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyAoEgrLsTgTTnvtMXVcwe9PCabdnk3PtUI&callback=initMap');
   }
 
-  shouldComponentUpdate(nextProps) {
-    return nextProps.loadMap !== this.props.loadMap;
-  }
-
   /**
    * reinitialize google map
    * 
    * @memberof Map
    */
-  componentDidUpdate() {
-    const { lat, lng } = this.state;
-    const coords = { lat, lng };
+  // componentDidUpdate() {
+  //   const { lat, lng } = this.state;
+  //   const coords = { lat, lng };
 
-    // reinitialize and center of map to the marker point
-    this.state.map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 12,
-      center: coords,
-    });
+  //   // reinitialize and center of map to the marker point
+  //   this.state.map = new google.maps.Map(document.getElementById('map'), {
+  //     zoom: 12,
+  //     center: coords,
+  //   });
 
-    this.addMapEventOnClick();
-    this.mark();
-  }
+  //   console.log(1);
+  //   this.addMapEventOnClick();
+  //   this.mark();
+  // }
 
 
   /**
@@ -122,9 +119,10 @@ export default class Map extends Component {
       this.setState({
         ...this.state,
         location: response.data.results[0].formatted_address,
-        marker,
+        marker: marker,
       }, () => {
-        this.props.onMark(this.state);
+        const { lat, lng, location } = this.state;
+        window.mapState = { lat, lng, location };
       });
     });
   }
@@ -171,34 +169,19 @@ export default class Map extends Component {
         map,
       }, () => {
         this.addMapEventOnClick();
-        this.mark();
       });
     }, Map.showError, { maximumAge: 600000, timeout: 5000, enableHighAccuracy: true });
-
-    /** watch consumer current position */
-    navigator.geolocation.watchPosition((position) => {
-      const { longitude, latitude } = position.coords;
-      this.setState({
-        ...this.state,
-        lat: latitude,
-        lng: longitude,
-      }, () => this.mark());
-    });
   }
 
   render() {
     return (
-      <div id="map" style={{ widht: '100%', height: 300 }} />
+      <div>
+        <div id="map" style={{ widht: '100%', height: 300 }} />
+        <p>Location: {this.state.location}</p>
+        <p>lat: {this.state.lat}</p>
+        <p>lng: {this.state.lng}</p>
+        <button className="button" onClick={window.close} > Set task Location</button>
+      </div>
     );
   }
 }
-
-Map.defaultProps = {
-  loadMap: false,
-};
-
-Map.propTypes = {
-  loadMap: PropTypes.bool.isRequired,
-  onMark: PropTypes.func.isRequired,
-};
-
