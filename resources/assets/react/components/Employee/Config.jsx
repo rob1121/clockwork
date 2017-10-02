@@ -40,6 +40,7 @@ class Config extends Component {
     this.setTask = this.setTask.bind(this);
     this.setDescription = this.setDescription.bind(this);
     this.setMapDetails = this.setMapDetails.bind(this);
+    this.openMapMarker = this.openMapMarker.bind(this);
   }
 
   /**
@@ -166,6 +167,12 @@ class Config extends Component {
   handleChangeTimeOut(timeout) {
     this.setTimeRange({ timeout });
   }
+  openMapMarker() {
+    const mapMarker = window.open('/map/marker');
+    mapMarker.onbeforeunload = () => {
+      console.log(mapMarker.mapState);
+    }
+  }
 
   render() {
     const { timein, timeout, start, end, task, description } = this.state;
@@ -262,11 +269,11 @@ class Config extends Component {
               </Column>
             </Columns>
 
-            <span>Set Task Location:</span>
-            <MapSchedule
+            <button className="button" onClick={this.openMapMarker}>Set Task Location</button>
+            {/* <MapSchedule
               loadMap={active}
               onMark={this.setMapDetails}
-            />
+            /> */}
           </Row>
         </Modal.Content>
         <Modal.Footer>

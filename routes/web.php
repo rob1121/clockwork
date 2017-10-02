@@ -27,6 +27,10 @@ Route::get('/schedule', function () {
     return view('schedule');
 });
 
+Route::get('/map/marker', function () {
+    return view('google.map');
+});
+
 Route::get('/employee-schedule/{user}/edit', 'EmployeeScheduleController@edit');
 Route::put('/employee-schedule/{user}', 'EmployeeScheduleController@update');
 Route::put('/employee-timein/{user}', 'UserTimeInController@update');

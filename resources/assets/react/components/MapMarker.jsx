@@ -70,6 +70,10 @@ export default class Map extends Component {
     Map.loadJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyAoEgrLsTgTTnvtMXVcwe9PCabdnk3PtUI&callback=initMap');
   }
 
+  shouldComponentUpdate(nextProps) {
+    return nextProps.loadMap !== this.props.loadMap;
+  }
+
   /**
    * reinitialize google map
    * 
@@ -120,8 +124,7 @@ export default class Map extends Component {
         location: response.data.results[0].formatted_address,
         marker,
       }, () => {
-        window.mapState = this.state;
-        window.close();
+        this.props.onMark(this.state);
       });
     });
   }
@@ -189,3 +192,13 @@ export default class Map extends Component {
     );
   }
 }
+
+Map.defaultProps = {
+  loadMap: false,
+};
+
+Map.propTypes = {
+  loadMap: PropTypes.bool.isRequired,
+  onMark: PropTypes.func.isRequired,
+};
+
