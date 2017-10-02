@@ -162,7 +162,6 @@ export default class Map extends Component {
         zoom: 12,
         center: coords,
       });
-
       /** update reactjs state */
       this.setState({
         ...this.state,

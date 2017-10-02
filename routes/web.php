@@ -33,6 +33,7 @@ Route::get('/map/marker', function () {
 
 Route::get('/employee-schedule/{user}/edit', 'EmployeeScheduleController@edit');
 Route::put('/employee-schedule/{user}', 'EmployeeScheduleController@update');
+Route::delete('/employee-schedule/{schedule_task}', 'EmployeeScheduleController@delete');
 Route::put('/employee-timein/{user}', 'UserTimeInController@update');
 Route::put('/employee-timeout/{user}', 'UserTimeOutController@update');
 

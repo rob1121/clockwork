@@ -65,7 +65,6 @@ export default class Map extends Component {
     // Connect the initMap() function within this class to the global window context,
     // so Google Maps can invoke it
     window.initMap = this.initMap;
-
     // Asynchronously load the Google Maps script, passing in the callback reference
     Map.loadJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyAoEgrLsTgTTnvtMXVcwe9PCabdnk3PtUI&callback=initMap');
   }
@@ -153,7 +152,10 @@ export default class Map extends Component {
   initMap() {
     /** get cuurent position */
     navigator.geolocation.getCurrentPosition((position) => {
-      const coords = { lat: position.coords.latitude, lng: position.coords.longitude };
+      const coords = { 
+        lat: window.lat || position.coords.latitude, 
+        lng: window.lng || position.coords.longitude,
+      };
 
       /** initialize map */
       const map = new google.maps.Map(document.getElementById('map'), {
@@ -164,11 +166,12 @@ export default class Map extends Component {
       /** update reactjs state */
       this.setState({
         ...this.state,
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
+        lat: window.lat || position.coords.latitude,
+        lng: window.lng || position.coords.longitude,
         map,
       }, () => {
         this.addMapEventOnClick();
+        this.mark();
       });
     }, Map.showError, { maximumAge: 600000, timeout: 5000, enableHighAccuracy: true });
   }

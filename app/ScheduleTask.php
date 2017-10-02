@@ -13,12 +13,17 @@ class ScheduleTask extends Model
    * @var array
    */
     protected $fillable = [
-      'user_id', 'date_start', 'date_end', 'longitude', 'latitude', 'location', 'task', 'required_time_in', 'required_time_out', 'description'
+      'user_id', 'schedule_id', 'date_start', 'date_end', 'lng', 'lat', 'location', 'task', 'required_time_in', 'required_time_out', 'description'
     ];
-
+    
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+        
+    public function schedule()
+    {
+        return $this->hasMany(Schedule::class);
     }
 
   /**
@@ -31,20 +36,21 @@ class ScheduleTask extends Model
         //fomat date to ex. 24:59:00
         $timein = Carbon::parse($scheduledTask->required_time_in)->format('H:i:00');
         $timeout = Carbon::parse($scheduledTask->required_time_out)->format('H:i:00');
-
-        $scheduleTask = static::firstOrNew([
-          "user_id" => $userId,
-          "date_start" => $scheduledTask->date_start,
-          "date_end" => $scheduledTask->date_end,
-          "required_time_in" => $timein,
-          "required_time_out" => $timeout,
-          "location" => $scheduledTask->location,
-          "longitude" => $scheduledTask->longitude,
-          "latitude" => $scheduledTask->latitude,
-          "task" => $scheduledTask->task,
-          "description" => $scheduledTask->description,
-        ]);
-
+        if (isset($scheduledTask->sched_id)) {
+            $scheduleTask = static::find($scheduledTask->sched_id);
+        } else {
+            $scheduleTask = new ScheduleTask;
+        }
+        $scheduleTask->user_id = $userId;
+        $scheduleTask->date_start = $scheduledTask->date_start;
+        $scheduleTask->date_end = $scheduledTask->date_end;
+        $scheduleTask->required_time_in = $timein;
+        $scheduleTask->required_time_out = $timeout;
+        $scheduleTask->location = $scheduledTask->location;
+        $scheduleTask->lng = $scheduledTask->lng;
+        $scheduleTask->lat = $scheduledTask->lat;
+        $scheduleTask->task = $scheduledTask->task;
+        $scheduleTask->description = $scheduledTask->description;
         $scheduleTask->save();
 
         return $scheduleTask;

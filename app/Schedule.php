@@ -16,7 +16,7 @@ class Schedule extends Model
    * @var array
    */
     protected $fillable = [
-        'user_id', 'time_in', 'time_out', 'due', 'longitude', 'latitude', 'location',
+        'user_id', 'schedule_task_id', 'time_in', 'time_out', 'due', 'lng', 'lat', 'location',
     ];
 
   /**
@@ -27,10 +27,15 @@ class Schedule extends Model
     protected $hidden = [
       'password', 'remember_token', 'created_at', 'updated_at'
     ];
-
+    
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+        
+    public function scheduleTask()
+    {
+        return $this->belongsTo(ScheduleTask::class);
     }
 
 
@@ -45,8 +50,9 @@ class Schedule extends Model
 
         while ($date->lessThanOrEqualTo($dateEnd)) {
             $userSchedule = static::firstOrNew([
-            "user_id" => $userId,
-            "due" => $date,
+                "user_id" => $userId,
+                "schedule_task_id" => $scheduledTask->id,
+                "due" => $date,
             ]);
             
             $userSchedule->save();

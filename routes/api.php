@@ -69,6 +69,10 @@ function transformScheduleTask($schedule)
           "title" => title_case("{$schedule->user->name} task: {$schedule->title}"),
           "start" => $schedule->start,
           "end" => $schedule->end,
+          "lng" => (float)$schedule->lng,
+          "lat" => (float)$schedule->lat,
+          "timein" => $schedule->required_time_in,
+          "timeout" => $schedule->required_time_out,
           ]);
     });
 

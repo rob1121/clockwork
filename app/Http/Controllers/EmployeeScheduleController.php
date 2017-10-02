@@ -29,12 +29,11 @@ class EmployeeScheduleController extends Controller
             'title' => 'required',
             'is_admin' => 'required',
         ]);
-
         $this->user = $user;
         $this->user->update(User::instance($request));
         
         if (!isset($request->scheduleTask)) {
-            return false;
+            return ["success" => true];
         }
         
         //fomat date to ex. 24:59:00
@@ -48,8 +47,8 @@ class EmployeeScheduleController extends Controller
             "scheduleTask.required_time_in" => "required|before_or_equal:{$timeout}",
             "scheduleTask.required_time_out" => "required|after_or_equal:{$timein}",
             "scheduleTask.location" => "required",
-            "scheduleTask.longitude" => "required|numeric",
-            "scheduleTask.latitude" => "required|numeric",
+            "scheduleTask.lng" => "required|numeric",
+            "scheduleTask.lat" => "required|numeric",
             "scheduleTask.task" => "required",
             "scheduleTask.description" => "required",
         ]);
@@ -64,6 +63,17 @@ class EmployeeScheduleController extends Controller
             "title" => title_case("{$this->user->name} task: {$scheduleTask->task}"),
             "start" => $scheduleTask->date_start,
             "end" => $scheduleTask->date_end,
+            "lng" => (float)$scheduleTask->lng,
+            "lat" => (float)$scheduleTask->lat,
+            "timein" => $scheduleTask->required_time_in,
+            "timeout" => $scheduleTask->required_time_out,
         ]);
+    }
+
+    public function delete(ScheduleTask $scheduleTask)
+    {
+        $scheduleTask->schedule()->delete();
+        
+        $scheduleTask->delete();
     }
 }

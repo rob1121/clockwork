@@ -12,7 +12,6 @@ import Columns from '../Layout/Columns';
 import Column from '../Layout/Column';
 import Row from '../Layout/Row';
 import Modal from '../Forms/Modal';
-import MapSchedule from '../MapSchedule';
 
 const format = 'h:mm a';
 
@@ -21,6 +20,7 @@ class Config extends Component {
     super(props);
 
     this.state = {
+      sched_id: undefined,
       start: moment(),
       end: moment(),
       timein: moment().hour(0).minute(0),
@@ -89,7 +89,7 @@ class Config extends Component {
   setStart(startDate) {
     this.setState({
       ...this.state,
-      start: startDate
+      start: startDate,
     });
   }
 
@@ -102,7 +102,7 @@ class Config extends Component {
   setEnd(endDate) {
     this.setState({
       ...this.state,
-      end: endDate
+      end: endDate,
     });
   }
 
@@ -131,19 +131,41 @@ class Config extends Component {
       timeout,
     });
   }
+
   openMapMarker() {
-    const mapMarker = window.open('/map/marker', "", "toolbar=no,scrollbars=no,resizable=no,top=500,left=500,width=720,height=720");
+    const mapMarker = window.open('/map/marker', '', 'toolbar=no,scrollbars=no,resizable=no,top=50,left=300,width=720,height=500');
+    mapMarker.lat = this.state.map.lat;
+    mapMarker.lng = this.state.map.lng;
     mapMarker.onbeforeunload = () => {
       this.setState({
         ...this.state,
         map: mapMarker.mapState,
       });
-    }
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { schedule } = nextProps;
+
+    this.setState({
+      sched_id: schedule.id,
+      start: moment(schedule.date_start ? schedule.date_start : null),
+      end: moment(schedule.date_end ? schedule.date_end : null),
+      timein: schedule.timein ? moment(moment().format('YYYY-MM-DD') + ' ' + schedule.timein) : moment().hour(0).minute(0),
+      timeout: schedule.timeout ? moment(moment().format('YYYY-MM-DD') + ' ' + schedule.timeout) : moment().hour(0).minute(0),
+      task: schedule.task || '',
+      description: schedule.description || '',
+      map: {
+        location: schedule.location || '',
+        lat: schedule.lat || '',
+        lng: schedule.lng || '',
+      }
+    });
   }
 
   render() {
     const { timein, timeout, start, end, task, description } = this.state;
-    const { active, onExit, onSubmit } = this.props;
+    const { active, onExit, onSubmit, schedule, deleteSchedule } = this.props;
 
     return (
       <Modal active={active}>
@@ -151,7 +173,6 @@ class Config extends Component {
         <Modal.Content>
 
           <Row>
-
             <Columns>
               <Column width={3}>
                 <span>From:</span>
@@ -240,6 +261,21 @@ class Config extends Component {
               <Column>
                 <p>longitude:</p>
                 <label className="label">{this.state.map.lng}</label>
+              </Column>
+            </Columns>
+            <Columns>
+              <Column>
+
+                <button
+                  className="button is-danger"
+                  onClick={() => deleteSchedule(this.state.sched_id)}
+                  style={{ display: (typeof this.state.sched_id === 'undefined' ? 'none' : 'block') }}
+                >
+                  <span>Delete</span>
+                  <span className="icon">
+                    <i className="fa fa-trash-o" />
+                  </span>
+                </button>
               </Column>
             </Columns>
           </Row>

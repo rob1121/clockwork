@@ -16,11 +16,12 @@ class CreateScheduleTable extends Migration
         Schema::create('schedules', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
+            $table->integer('schedule_task_id')->unsigned();
             $table->time('time_in')->nullable();
             $table->time('time_out')->nullable();
             $table->string('location')->nullable();
-            $table->string('longitude')->nullable();
-            $table->string('latitude')->nullable();
+            $table->string('lng')->nullable();
+            $table->string('lat')->nullable();
             $table->date('due')->nullable();
             $table->timestamps();
         });

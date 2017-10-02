@@ -22,8 +22,8 @@ $factory->define(App\Schedule::class, function (Faker\Generator $faker) {
         'time_out' => '13:00:00',
         'due' => $faker->dateTimeBetween(),
         'location' => $faker->word,
-        'longitude' => $faker->longitude,
-        'latitude' => $faker->latitude,
+        'lng' => $faker->longitude,
+        'lat' => $faker->latitude,
     ];
 });
 
@@ -40,9 +40,9 @@ $factory->define(App\ScheduleTask::class, function (Faker\Generator $faker) {
         'required_time_in' => '8:00:00',
         'required_time_out' => '13:00:00',
         'location' => $faker->word,
-        'longitude' => $faker->longitude,
-        'latitude' => $faker->latitude,
+        'lng' => $faker->longitude,
+        'lat' => $faker->latitude,
         'task' => $faker->sentence,
-        'task' => $faker->paragraph,
+        'description' => $faker->paragraph,
     ];
 });

@@ -21,8 +21,8 @@ class CreateScheduleTaskTable extends Migration
             $table->time('required_time_in')->nullable();
             $table->time('required_time_out')->nullable();
             $table->string('location')->nullable();
-            $table->string('longitude')->nullable();
-            $table->string('latitude')->nullable();
+            $table->string('lng')->nullable();
+            $table->string('lat')->nullable();
             $table->string('task')->nullable();
             $table->string('description')->nullable();
             $table->timestamps();

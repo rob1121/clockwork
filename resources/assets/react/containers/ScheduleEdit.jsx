@@ -1,6 +1,6 @@
 import React from 'react';
-import axios from 'axios';
 import { connect } from 'react-redux';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import {
   setEmployee,
@@ -9,13 +9,12 @@ import {
   updateSchedule,
   saveEmployeeSchedule,
 } from '../actions/EmployeeAction';
-import { setEmployeeSchedule } from '../actions/EmployeeScheduleAction';
+import { setEmployeeSchedule, resetScheduleModal, deleteSchedule } from '../actions/EmployeeScheduleAction';
 import Nav from '../components/Nav';
 import EmployeeDetails from '../components/EmployeeEdit/EmployeeDetails';
 import Calendar from '../components/Calendar';
 import Row from '../components/Layout/Row';
 import EmployeeConfigModal from '../components/Employee/Config';
-import EmployeeViewScheduleModal from '../components/Employee/ViewConfig';
 import ErrorNotification from '../components/Forms/ErrorNotification';
 
 const EMPLOYEE_ID_SECTION = 4;
@@ -25,7 +24,6 @@ class App extends React.Component {
     super(props);
     this.state = {
       showConfigModal: false,
-      showViewConfigModal: false,
       errors: {
         message: '',
         errors: {},
@@ -34,20 +32,21 @@ class App extends React.Component {
     };
 
     this.toggleConfigModal = this.toggleConfigModal.bind(this);
-    this.toggleViewConfigModal = this.toggleViewConfigModal.bind(this);
     this.createEmployeeSchedule = this.createEmployeeSchedule.bind(this);
     this.saveEmployee = this.saveEmployee.bind(this);
-    this.saveEmployeeSchedule = this.saveEmployeeSchedule.bind(this);
     this.resetErrors = this.resetErrors.bind(this);
     this.getEmployeeSchedule = this.getEmployeeSchedule.bind(this);
+    this.newSchedule = this.newSchedule.bind(this);
+    this.deleteSelectedSchedule = this.deleteSelectedSchedule.bind(this);
   }
-  shouldComponentUpdate(nextProps, nextState) {
-    const hasNewErrors = JSON.stringify(nextState.errors) !== JSON.stringify(this.state.errors);
-    const hasNewEmployeeSchedule = JSON.stringify(nextProps.employeeSchedule) !== JSON.stringify(this.props.employeeSchedule);
-    const hasNewEmployee = JSON.stringify(nextProps.employee) !== JSON.stringify(this.props.employee);
 
-    return (hasNewErrors || hasNewEmployeeSchedule || hasNewEmployee);
-  }
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   const hasNewState = JSON.stringify(nextState) !== JSON.stringify(this.state);
+  //   const hasNewEmployeeSchedule = JSON.stringify(nextProps.employeeSchedule) !== JSON.stringify(this.props.employeeSchedule);
+  //   const hasNewEmployee = JSON.stringify(nextProps.employee) !== JSON.stringify(this.props.employee);
+
+  //   return (hasNewState || hasNewEmployeeSchedule || hasNewEmployee);
+  // }
 
 
   componentWillMount() {
@@ -68,15 +67,13 @@ class App extends React.Component {
     });
   }
 
-  /**
-   * toggle config view modal
-   * 
-   * @memberof App
-   */
-  toggleViewConfigModal() {
-    this.setState({
-      showViewConfigModal: !this.state.showViewConfigModal,
-    });
+  deleteSelectedSchedule(id) {
+    this.props.deleteSchedule(id);
+    this.toggleConfigModal();
+  }
+
+  newSchedule() {
+    this.props.resetScheduleModal().then(() => this.toggleConfigModal());
   }
 
   /**
@@ -87,6 +84,7 @@ class App extends React.Component {
    */
   createEmployeeSchedule(schedule) {
     this.props.saveEmployeeSchedule(schedule).then((data) => {
+      this.props.resetScheduleModal();
       this.props.updateSchedule(data);
       this.toggleConfigModal();
     }).catch((errors) => {
@@ -96,15 +94,6 @@ class App extends React.Component {
       });
       this.toggleConfigModal();
     });
-  }
-
-  /**
-   * update user schedule
-   * 
-   * @memberof App
-   */
-  saveEmployeeSchedule(e) {
-    console.log(e);
   }
 
   /**
@@ -139,11 +128,13 @@ class App extends React.Component {
    */
   getEmployeeSchedule(schedule) {
     this.props.setEmployeeSchedule(schedule)
-      .then(() => this.toggleViewConfigModal());
+      .then(() => {
+        this.toggleConfigModal();
+      });
   }
 
   render() {
-    const { showConfigModal, showViewConfigModal, errors } = this.state;
+    const { showConfigModal, errors } = this.state;
     const { employee, employeeSchedule } = this.props;
 
     return (
@@ -162,7 +153,7 @@ class App extends React.Component {
           <hr />
           <h1 className="title is-1 has-text-primary">Schedule</h1>
 
-          <button className="button" onClick={this.toggleConfigModal}>
+          <button className="button" onClick={this.newSchedule}>
             <span>New Schedule </span>
             <span className="icon"><i className="fa fa-calendar" /></span>
           </button>
@@ -179,20 +170,16 @@ class App extends React.Component {
           onExit={this.toggleConfigModal}
           onSubmit={this.createEmployeeSchedule}
           active={showConfigModal}
-        />
-
-        {/* <EmployeeViewScheduleModal
           schedule={employeeSchedule}
-          onExit={this.toggleViewConfigModal}
-          onSave={this.saveEmployeeSchedule}
-          active={showViewConfigModal}
-        /> */}
-      </Nav>
+          deleteSchedule={this.deleteSelectedSchedule}
+        />
+      </Nav >
     );
   }
 }
 
 App.propTypes = {
+  resetScheduleModal: PropTypes.func.isRequired,
   setEmployee: PropTypes.func.isRequired,
   employee: PropTypes.shape({
     id: PropTypes.number,
@@ -212,8 +199,8 @@ App.propTypes = {
     required_time_in: PropTypes.string,
     required_time_out: PropTypes.string,
     location: PropTypes.string,
-    longitude: PropTypes.number,
-    latitude: PropTypes.number,
+    lng: PropTypes.number,
+    lat: PropTypes.number,
     task: PropTypes.string,
     description: PropTypes.string,
   }).isRequired,
@@ -237,6 +224,8 @@ const mapDispatchToProps = dispatch => ({
   saveEmployeeToDb: () => dispatch(saveEmployeeToDb()),
   saveEmployeeSchedule: schedule => dispatch(saveEmployeeSchedule(schedule)),
   setEmployeeSchedule: schedule => dispatch(setEmployeeSchedule(schedule)),
+  resetScheduleModal: () => dispatch(resetScheduleModal()),
+  deleteSchedule: id => dispatch(deleteSchedule(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

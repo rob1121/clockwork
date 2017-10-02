@@ -1,5 +1,7 @@
 import axios from 'axios';
-
+import {
+  findIndex
+} from 'lodash';
 /**
  * set employee
  * 
@@ -65,6 +67,7 @@ export function saveEmployeeSchedule({
   task,
   description,
   map,
+  sched_id
 }) {
   return (dispatch, getState) => {
     const employee = getState().employee;
@@ -72,24 +75,20 @@ export function saveEmployeeSchedule({
       axios.put(`/employee-schedule/${employee.id}`, {
           ...employee,
           scheduleTask: {
+            sched_id,
             date_start: start.format('YYYY-MM-DD'),
             date_end: end.format('YYYY-MM-DD'),
             required_time_in: timein.format('HH:mm:ss'),
             required_time_out: timeout.format('HH:mm:ss'),
             location: map.location,
-            longitude: map.lng,
-            latitude: map.lat,
+            lng: map.lng,
+            lat: map.lat,
             task,
             description,
           },
         }).then(({
           data,
-        }) => {
-          dispatch({
-            type: 'RESET_SCHEDULE'
-          });
-          resolve(data);
-        })
+        }) => resolve(data))
         .catch(error => reject(error.response.data));
     });
   };
@@ -103,8 +102,14 @@ export function saveEmployeeSchedule({
 export function updateSchedule(newSchedule) {
   return (dispatch, getState) => {
     const employee = getState().employee;
+    const index = findIndex(employee.schedule_task, ['id', newSchedule.id]);
+    const noMatchFound = index < 0;
 
-    employee.schedule_task = [...employee.schedule_task, newSchedule];
+    if (noMatchFound) {
+      employee.schedule_task = [...employee.schedule_task, newSchedule];
+    } else {
+      employee.schedule_task[index] = newSchedule;
+    }
 
     dispatch({
       type: 'SET_EMPLOYEE',
