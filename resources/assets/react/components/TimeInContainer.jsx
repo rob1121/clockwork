@@ -54,10 +54,11 @@ class TimeInContainer extends React.Component {
     axios.put(`/employee-timeout/${window.user.id}`, {
       ...window.mapState
     }).then(({ data }) => {
-      this.setState({
-        ...this.state,
-        schedule: data,
-      })
+      // this.setState({
+      //   ...this.state,
+      //   schedule: data,
+      // });
+      location.reload();
     });
   }
 
@@ -96,6 +97,8 @@ class TimeInContainer extends React.Component {
     if (schedule) {
       if (schedule.time_in && schedule.time_out === null) {
         timeBtn = <User.Time.Out onClick={this.timeOut} />;
+      } else if (schedule.time_in && schedule.time_out) {
+        timeBtn = null;
       } else {
         timeBtn = <User.Time.In onClick={this.timeIn} />;
       }
@@ -108,7 +111,7 @@ class TimeInContainer extends React.Component {
           <Column offset={1} width={9}>
             <Columns>
               <Column width={4}>
-                <User.Lapse timein={schedule.time_in} />
+                <User.Lapse timein={schedule.time_in} timeout={schedule.time_out} />
                 <p className="has-text-centered">timein: {schedule.time_in || '--:--:--'} | timeout: {schedule.time_out || '--:--:--'}</p>
                 <User.Time>
                   {timeBtn}

@@ -1,27 +1,65 @@
 import React from 'react';
 import moment from 'moment';
-import LoaderHOC from './LoaderHOC';
-import { withState } from 'recompose';
 
-const enhance = withState('lapse', 'setLapse', '--:--:--');
-const Lapse = ({ timein, lapse, setLapse }) => {
-  timein = moment(moment().format('YYYY-MM-DD') + ' ' + timein);
-  let now = undefined;
-  let duration = undefined;
+export default class Lapse extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      lapse: '--:--:--',
+    };
 
-  setInterval(() => {
-    now = moment();
-    duration = moment.duration(now.diff(timein));
-    setLapse(`${duration.get('hour')}:${duration.get('minutes')}:${duration.get('seconds')}`);
-    console.log(lapse);
-  }, 1000);
-  return (
-    <div className="columns">
-      <div className="column has-text-centered">
-        <p className="time__spent">{lapse}</p>
+    this.setLapse = this.setLapse.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { timein, timeout } = nextProps;
+    let now = '';
+    let duration = '';
+
+    const today = moment().format('YYYY-MM-DD');
+
+    let mTimein = timein || '00:00:00';
+    mTimein = moment(`${today} ${mTimein}`);
+
+    setInterval(() => {
+      if (timein && timeout === null) {
+        now = moment();
+        duration = moment.duration(now.diff(mTimein));
+        this.setLapse(`${duration.get('hour')}:${duration.get('minutes')}:${duration.get('seconds')}`);
+      }
+    }, 1000);
+
+    if (timeout !== null && timein !== null) {
+      mTimein = moment(`${today} ${timein}`);
+
+      let mTimeout = timeout || '00:00:00';
+      mTimeout = moment(`${today} ${mTimeout}`);
+      duration = moment.duration(mTimeout.diff(mTimein));
+      this.setLapse(`${duration.get('hour')}:${duration.get('minutes')}:${duration.get('seconds')}`);
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return JSON.stringify(nextState) !== JSON.stringify(this.state);
+  }
+
+  setLapse(str) {
+    this.setState({
+      ...this.state,
+      lapse: str,
+    });
+  }
+
+
+  render() {
+    const { lapse } = this.state;
+
+    return (
+      <div className="columns">
+        <div className="column has-text-centered">
+          <p className="time__spent">{lapse}</p>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
-
-export default LoaderHOC('timein')(enhance(Lapse));

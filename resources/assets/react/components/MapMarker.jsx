@@ -170,7 +170,13 @@ export default class Map extends Component {
         <p>Location: {this.state.location}</p>
         <p>lat: {this.state.lat}</p>
         <p>lng: {this.state.lng}</p>
-        <button className="button" onClick={window.close} > Set task Location</button>
+        <button
+          className="button"
+          onClick={window.close}
+          style={{ display: ((window.readonly !== undefined) ? 'none' : 'block') }}
+        >
+          Set task Location
+        </button>
       </div>
     );
   }

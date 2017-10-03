@@ -200,6 +200,7 @@ App.propTypes = {
   updateSchedule: PropTypes.func.isRequired,
   saveEmployeeSchedule: PropTypes.func.isRequired,
   setEmployeeSchedule: PropTypes.func.isRequired,
+  deleteSchedule: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({ employee, employeeSchedule, googleMap }) => ({
