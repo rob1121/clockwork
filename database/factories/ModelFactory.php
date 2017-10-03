@@ -8,7 +8,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->safeEmail,
         'title' => $faker->jobTitle,
         'is_admin' => false,
-        'password' => bcrypt($faker->password),
+        'password' => bcrypt('password'),
         'remember_token' => str_random(10),
     ];
 });
@@ -18,8 +18,6 @@ $factory->define(App\Schedule::class, function (Faker\Generator $faker) {
         'user_id' => function () {
              return factory(App\User::class)->create()->id;
         },
-        'time_in' => '8:00:00',
-        'time_out' => '13:00:00',
         'due' => $faker->dateTimeBetween(),
         'location' => $faker->word,
         'lng' => $faker->longitude,

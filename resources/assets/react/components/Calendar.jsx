@@ -41,5 +41,5 @@ Calendar.propTypes = {
   selectEventSlot: PropTypes.func,
 };
 
-export default LoaderHOC('events')(Calendar);
+export default Calendar;
 

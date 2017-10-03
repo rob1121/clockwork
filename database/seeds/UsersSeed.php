@@ -19,31 +19,42 @@ class UsersSeed extends Seeder
         DB::table('schedule_tasks')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
+        $user = factory(App\User::class)->create([
+            'email' => 'robinson.legaspi@maximintegrated.com',
+            'is_admin' => true,
+        ]);
+        $this->fillData($user);
+
         $users = factory(App\User::class, 5)->create();
 
         $users->map(function ($user) {
-            $scheduleTask = factory(App\ScheduleTask::class)->create([
-              'user_id' => $user->id,
-            ]);
-
-            $start_date = Carbon::parse($scheduleTask->date_start);
-            $end_date = Carbon::parse($scheduleTask->date_end);
-
-            while ($start_date->lessThanOrEqualTo($end_date)) {
-                factory(App\Schedule::class)->create([
-                  'user_id' => $user->id,
-                  'schedule_task_id' => $scheduleTask->id,
-                  'due' => $start_date,
-
-                  'location' => $scheduleTask->location,
-                  'lng' => $scheduleTask->longitude,
-                  'lat' => $scheduleTask->latitude,
-                ]);
-
-                $start_date->addDay();
-            }
+            $this->fillData($user);
         });
 
         $this->command->info("all tables are seeded");
+    }
+
+    private function fillData($user)
+    {
+        $scheduleTask = factory(App\ScheduleTask::class)->create([
+            'user_id' => $user->id,
+          ]);
+
+          $start_date = Carbon::parse($scheduleTask->date_start);
+          $end_date = Carbon::parse($scheduleTask->date_end);
+
+        while ($start_date->lessThanOrEqualTo($end_date)) {
+            factory(App\Schedule::class)->create([
+            'user_id' => $user->id,
+            'schedule_task_id' => $scheduleTask->id,
+            'due' => $start_date,
+
+            'location' => $scheduleTask->location,
+            'lng' => $scheduleTask->longitude,
+            'lat' => $scheduleTask->latitude,
+            ]);
+
+            $start_date->addDay();
+        }
     }
 }

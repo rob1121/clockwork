@@ -1,7 +1,8 @@
 <?php
 
-use App\ScheduleTask;
 use App\User;
+use Carbon\Carbon;
+use App\ScheduleTask;
 use Illuminate\Http\Request;
 
 /*
@@ -20,7 +21,19 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('/schedule/{user}', function (User $user) {
-    return $user->load(['scheduleTask','schedule']);
+    $now = Carbon::now()->toDateString();
+    $scheduleTask = $user->scheduleTask->map(function ($task) {
+        return array_merge($task->toArray(), [
+            "start" => $task->date_start,
+            "end" => $task->date_end,
+            "title" => $task->task,
+        ]);
+    });
+    return [
+        "user" => $user->toArray(),
+        "schedule_task" => $scheduleTask,
+        "schedule" => $user->schedule->where('due', $now)->first(),
+    ];
 });
 
 Route::get('/schedule', function () {

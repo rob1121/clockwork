@@ -1,8 +1,11 @@
 import React from 'react';
+import axios from 'axios';
 
-const Out = () => (
-  <div className="column has-text-left">
-    <button className="button is-large">Time Out</button>
+const Out = ({ onClick }) => (
+  <div className="column has-text-centered">
+    <button className="button is-large" onClick={onClick}>
+      <span className="icon"><i className="fa fa-clock-o"></i></span>
+      <span>Time Out</span></button>
   </div>
 );
 

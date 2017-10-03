@@ -1,19 +1,13 @@
 import React from 'react';
 import axios from 'axios';
 
-const USER_ID_SECTION = 4;
-const userId = window.location.href.split('/')[USER_ID_SECTION];
+const In = ({ onClick }) => (
+  <div className="column has-text-centered">
 
-const timeIn = () => {
-  axios.put(`/employee-timein/${userId}`);
-  navigator.geolocation.getCurrentPosition((position) => {
-    console.log(position);
-  });
-};
-
-const In = () => (
-  <div className="column has-text-right">
-    <button className="button is-large" onClick={timeIn}>Time In</button>
+    <button className="button is-large" onClick={onClick}>
+      <span className="icon"><i className="fa fa-clock-o"></i></span>
+      <span>Time In</span>
+    </button>
   </div>
 );
 

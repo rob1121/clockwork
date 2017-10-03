@@ -40,15 +40,6 @@ class App extends React.Component {
     this.deleteSelectedSchedule = this.deleteSelectedSchedule.bind(this);
   }
 
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   const hasNewState = JSON.stringify(nextState) !== JSON.stringify(this.state);
-  //   const hasNewEmployeeSchedule = JSON.stringify(nextProps.employeeSchedule) !== JSON.stringify(this.props.employeeSchedule);
-  //   const hasNewEmployee = JSON.stringify(nextProps.employee) !== JSON.stringify(this.props.employee);
-
-  //   return (hasNewState || hasNewEmployeeSchedule || hasNewEmployee);
-  // }
-
-
   componentWillMount() {
     const employeeId = window.location.href.split('/')[EMPLOYEE_ID_SECTION];
     axios.get(`/api/employee-schedule/${employeeId}`).then(({ data }) => {

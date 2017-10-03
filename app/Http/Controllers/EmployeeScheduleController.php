@@ -8,6 +8,16 @@ use Illuminate\Http\Request;
 
 class EmployeeScheduleController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('admin');
+    }
+
   /**
    * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
    */

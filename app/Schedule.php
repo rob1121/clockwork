@@ -83,7 +83,7 @@ class Schedule extends Model
         $now = Carbon::now();
 
         $query->where('due', $now->toDateString())->update([
-        'time_out' => $now->toTimeString(),
+            'time_out' => $now->toTimeString(),
         ]);
     }
 }

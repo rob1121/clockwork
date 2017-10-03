@@ -70,27 +70,6 @@ export default class Map extends Component {
   }
 
   /**
-   * reinitialize google map
-   * 
-   * @memberof Map
-   */
-  // componentDidUpdate() {
-  //   const { lat, lng } = this.state;
-  //   const coords = { lat, lng };
-
-  //   // reinitialize and center of map to the marker point
-  //   this.state.map = new google.maps.Map(document.getElementById('map'), {
-  //     zoom: 12,
-  //     center: coords,
-  //   });
-
-  //   console.log(1);
-  //   this.addMapEventOnClick();
-  //   this.mark();
-  // }
-
-
-  /**
    * set google map marker
    * 
    * @param {any} coords 
@@ -98,7 +77,11 @@ export default class Map extends Component {
    * @memberof Map
    */
   mark() {
-    if (this.state.marker !== undefined) {
+    /** declared in window.opener to make map as readonly */
+    if (window.readonly !== undefined &&
+      this.state.marker !== undefined) {
+      return false;
+    } else if (this.state.marker !== undefined) {
       this.state.marker.setMap(null);
     }
 
@@ -136,6 +119,10 @@ export default class Map extends Component {
     // This event listener calls marker() when the map is clicked.
     google.maps.event.addListener(this.state.map, 'click', (event) => {
       const coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };
+
+      /** declared in window.opener to make map as readonly */
+      if (window.readonly !== undefined) return false;
+
       this.setState({
         ...this.state,
         lat: coords.lat,
@@ -152,8 +139,8 @@ export default class Map extends Component {
   initMap() {
     /** get cuurent position */
     navigator.geolocation.getCurrentPosition((position) => {
-      const coords = { 
-        lat: window.lat || position.coords.latitude, 
+      const coords = {
+        lat: window.lat || position.coords.latitude,
         lng: window.lng || position.coords.longitude,
       };
 

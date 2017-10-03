@@ -11,25 +11,17 @@
 |
 */
 
+
+Auth::routes();
+
+Route::get('/logout', 'UserController@logout');
+Route::get('/home', 'HomeController@index')->name('home');
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/', function () {
-    return view('calendar');
-});
-
-Route::get('/time/{user}', function () {
-    return view('time_in_time_out.index');
-});
-
-Route::get('/schedule', function () {
-    return view('schedule');
-});
-
-Route::get('/map/marker', function () {
-    return view('google.map');
-});
+Route::get('/schedule', 'HomeController@schedule');
 
 Route::get('/employee-schedule/{user}/edit', 'EmployeeScheduleController@edit');
 Route::put('/employee-schedule/{user}', 'EmployeeScheduleController@update');
@@ -37,6 +29,10 @@ Route::delete('/employee-schedule/{schedule_task}', 'EmployeeScheduleController@
 Route::put('/employee-timein/{user}', 'UserTimeInController@update');
 Route::put('/employee-timeout/{user}', 'UserTimeOutController@update');
 
-Auth::routes();
+Route::get('/time', function () {
+    return view('time_in_time_out.index');
+})->middleware('auth');
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/map/marker', function () {
+    return view('google.map');
+});

@@ -12,7 +12,6 @@ import Columns from '../Layout/Columns';
 import Column from '../Layout/Column';
 import Row from '../Layout/Row';
 import Modal from '../Forms/Modal';
-import MapSchedule from '../MapSchedule';
 
 const format = 'h:mm a';
 
@@ -21,6 +20,7 @@ class Config extends Component {
     super(props);
 
     this.state = {
+      sched_id: undefined,
       start: moment(),
       end: moment(),
       timein: moment().hour(0).minute(0),
@@ -30,62 +30,15 @@ class Config extends Component {
       map: {},
     };
 
-    this.setDateRange = this.setDateRange.bind(this);
-    this.handleChangeStart = this.handleChangeStart.bind(this);
-    this.handleChangeEnd = this.handleChangeEnd.bind(this);
+    this.setStart = this.setStart.bind(this);
+    this.setEnd = this.setEnd.bind(this);
 
-    this.setTimeRange = this.setTimeRange.bind(this);
-    this.handleChangeTimeIn = this.handleChangeTimeIn.bind(this);
-    this.handleChangeTimeOut = this.handleChangeTimeOut.bind(this);
+    this.setTimeIn = this.setTimeIn.bind(this);
+    this.setTimeOut = this.setTimeOut.bind(this);
     this.setTask = this.setTask.bind(this);
     this.setDescription = this.setDescription.bind(this);
     this.setMapDetails = this.setMapDetails.bind(this);
-  }
-
-  /**
-   * set date start and date end
-   * 
-   * @param {any} { startDate, endDate } 
-   * @memberof Config
-   */
-  setDateRange({ startDate, endDate }) {
-    startDate = startDate || this.state.start;
-    endDate = endDate || this.state.end;
-
-    if (startDate.isAfter(endDate)) {
-      const temp = startDate;
-      startDate = endDate;
-      endDate = temp;
-    }
-
-    this.setState({
-      ...this.state,
-      end: endDate,
-      start: startDate,
-    });
-  }
-
-  /**
-   * set time in and time out
-   * 
-   * @param {any} { timein, timeout } 
-   * @memberof Config
-   */
-  setTimeRange({ timein, timeout }) {
-    timein = timein || this.state.timein;
-    timeout = timeout || this.state.timeout;
-
-    if (timein.isAfter(timeout)) {
-      const temp = timein;
-      timein = timeout;
-      timeout = temp;
-    }
-
-    this.setState({
-      ...this.state,
-      timeout,
-      timein,
-    });
+    this.openMapMarker = this.openMapMarker.bind(this);
   }
 
   /**
@@ -133,8 +86,11 @@ class Config extends Component {
    * @param {any} startDate 
    * @memberof Config
    */
-  handleChangeStart(startDate) {
-    this.setDateRange({ startDate });
+  setStart(startDate) {
+    this.setState({
+      ...this.state,
+      start: startDate,
+    });
   }
 
   /**
@@ -143,8 +99,11 @@ class Config extends Component {
    * @param {any} endDate 
    * @memberof Config
    */
-  handleChangeEnd(endDate) {
-    this.setDateRange({ endDate });
+  setEnd(endDate) {
+    this.setState({
+      ...this.state,
+      end: endDate,
+    });
   }
 
   /**
@@ -153,8 +112,11 @@ class Config extends Component {
    * @param {any} timein 
    * @memberof Config
    */
-  handleChangeTimeIn(timein) {
-    this.setTimeRange({ timein });
+  setTimeIn(timein) {
+    this.setState({
+      ...this.state,
+      timein,
+    });
   }
 
   /**
@@ -163,13 +125,47 @@ class Config extends Component {
    * @param {any} timeout 
    * @memberof Config
    */
-  handleChangeTimeOut(timeout) {
-    this.setTimeRange({ timeout });
+  setTimeOut(timeout) {
+    this.setState({
+      ...this.state,
+      timeout,
+    });
+  }
+
+  openMapMarker() {
+    const mapMarker = window.open('/map/marker', '', 'toolbar=no,scrollbars=no,resizable=no,top=50,left=300,width=720,height=500');
+    mapMarker.lat = this.state.map.lat;
+    mapMarker.lng = this.state.map.lng;
+    mapMarker.onbeforeunload = () => {
+      this.setState({
+        ...this.state,
+        map: mapMarker.mapState,
+      });
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { schedule } = nextProps;
+
+    this.setState({
+      sched_id: schedule.id,
+      start: moment(schedule.date_start ? schedule.date_start : null),
+      end: moment(schedule.date_end ? schedule.date_end : null),
+      timein: schedule.timein ? moment(moment().format('YYYY-MM-DD') + ' ' + schedule.timein) : moment().hour(0).minute(0),
+      timeout: schedule.timeout ? moment(moment().format('YYYY-MM-DD') + ' ' + schedule.timeout) : moment().hour(0).minute(0),
+      task: schedule.task || '',
+      description: schedule.description || '',
+      map: {
+        location: schedule.location || '',
+        lat: schedule.lat || '',
+        lng: schedule.lng || '',
+      }
+    });
   }
 
   render() {
-    const { required_time_in, required_time_out, date_start, date_end, task, description } = this.props.schedule;
-    const { active, onExit, onSave } = this.props;
+    const { timein, timeout, start, end, task, description } = this.state;
+    const { active, onExit, onSubmit, schedule, deleteSchedule } = this.props;
 
     return (
       <Modal active={active}>
@@ -177,20 +173,12 @@ class Config extends Component {
         <Modal.Content>
 
           <Row>
-
             <Columns>
               <Column width={3}>
                 <span>From:</span>
                 <DatePicker
-                  selected={moment(date_start)}
-                  selectsStart
-                  startDate={moment(date_start)}
-                  endDate={moment(date_end)}
-                  onChange={this.handleChangeStart}
-                  peekNextMonth
-                  showMonthDropdown
-                  showYearDropdown
-
+                  selected={start}
+                  onChange={this.setStart}
                   className="input is-small"
                   dropdownMode="select"
                 />
@@ -198,14 +186,8 @@ class Config extends Component {
               <Column width={3}>
                 <span>To:</span>
                 <DatePicker
-                  selected={moment(date_end)}
-                  selectsEnd
-                  startDate={moment(date_start)}
-                  endDate={moment(date_end)}
-                  onChange={this.handleChangeEnd}
-                  peekNextMonth
-                  showMonthDropdown
-                  showYearDropdown
+                  selected={end}
+                  onChange={this.setEnd}
                   className="input is-small"
                   dropdownMode="select"
                 />
@@ -217,9 +199,9 @@ class Config extends Component {
                 <span>Daily time in: </span>
                 <TimePicker
                   showSecond={false}
-                  value={moment()}
+                  value={timein}
                   className="xxx"
-                  onChange={this.handleChangeTimeIn}
+                  onChange={this.setTimeIn}
                   format={format}
                   use12Hours
                 />
@@ -228,9 +210,9 @@ class Config extends Component {
                 <span>Daily time out: </span>
                 <TimePicker
                   showSecond={false}
-                  value={moment()}
+                  value={timeout}
                   className="xxx"
-                  onChange={this.handleChangeTimeOut}
+                  onChange={this.setTimeOut}
                   format={format}
                   use12Hours
                 />
@@ -239,7 +221,7 @@ class Config extends Component {
 
             <Columns>
               <Column>
-                <span>Task:{task}</span>
+                <span>Task:</span>
                 <input
                   type="text"
                   className="input is-small"
@@ -262,12 +244,44 @@ class Config extends Component {
               </Column>
             </Columns>
 
-            <span>Task Location:</span>
+            <button className="button" onClick={this.openMapMarker}>Set Task Location</button>
+            <Columns>
+              <Column>
+                <p>Location:</p>
+                <label className="label">{this.state.map.location}</label>
+              </Column>
+            </Columns>
+            <Columns>
+              <Column>
+                <p>latitude:</p>
+                <label className="label">{this.state.map.lat}</label>
+              </Column>
+            </Columns>
+            <Columns>
+              <Column>
+                <p>longitude:</p>
+                <label className="label">{this.state.map.lng}</label>
+              </Column>
+            </Columns>
+            <Columns>
+              <Column>
 
+                <button
+                  className="button is-danger"
+                  onClick={() => deleteSchedule(this.state.sched_id)}
+                  style={{ display: (typeof this.state.sched_id === 'undefined' ? 'none' : 'block') }}
+                >
+                  <span>Delete</span>
+                  <span className="icon">
+                    <i className="fa fa-trash-o" />
+                  </span>
+                </button>
+              </Column>
+            </Columns>
           </Row>
-        </Modal.Content>
+        </Modal.Content >
         <Modal.Footer>
-          <button className="button" onClick={() => onSave(this.state)}>
+          <button className="button" onClick={() => onSubmit(this.state)}>
             <span>Save</span>
             <span className="icon">
               <i className="fa fa-save" />
@@ -281,34 +295,15 @@ class Config extends Component {
             </span>
           </button>
         </Modal.Footer>
-      </Modal>
+      </Modal >
     );
   }
 }
 
-Config.defaultProps = {
-  active: 0,
-  onExit: undefined,
-  onSave: undefined,
-  schedule: undefined,
-};
-
 Config.propTypes = {
-  active: PropTypes.bool,
-  onExit: PropTypes.func,
-  onSave: PropTypes.func,
-  schedule: PropTypes.shape({
-    employee_id: PropTypes.number,
-    date_start: PropTypes.string,
-    date_end: PropTypes.string,
-    required_time_in: PropTypes.string,
-    required_time_out: PropTypes.string,
-    location: PropTypes.string,
-    longitude: PropTypes.number,
-    latitude: PropTypes.number,
-    task: PropTypes.string,
-    description: PropTypes.string,
-  }).isRequired,
+  active: PropTypes.bool.isRequired,
+  onExit: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default Config;
