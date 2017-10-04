@@ -152,7 +152,7 @@ class App extends React.Component {
 
         <Row width={10} offset={1}>
           <Calendar
-            events={employee.schedule_task}
+            events={employee.schedule_task || []}
             selectEvent={this.getEmployeeSchedule}
           />
         </Row>
